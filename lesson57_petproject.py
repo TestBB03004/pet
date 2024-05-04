@@ -12,8 +12,14 @@ energy = 70
 happiness = 100
 satiety = 30
 health = 60
+clear = 50
 
 coin = 0
+
+def clean():
+    global happiness, clear
+    happiness = happiness + 10
+    clear = clear + 20
 
 def feed():
     global energy, satiety
@@ -59,6 +65,17 @@ def check(message):
     if health <= 0:
         bot.send_message(message.chat.id, f'{name} умер от болезни. '
                                               f'Не забывайте лечить питомца!')
+    if clear <= 0:
+        bot.send_message(message.chat.id, f'{name} умер от болезни. '
+                                              f'Не забывайте мыть питомца!')
+
+@bot.message_handler(commands=['clear'])
+def play_handler(message):
+    clean()
+    bot.send_message(message.chat.id, f'{name} помылся и '
+                                      f'теперь его чистота составляет {clear}!')
+    check(message)
+
 
 @bot.message_handler(commands=['play'])
 def play_handler(message):
@@ -94,7 +111,8 @@ def about_pet(message):
                                       f'уровень голода {satiety} '
                                       f'уровень энергии {energy} '
                                       f'здоровье {health} '
-                                      f'имя питомца {name} ')
+                                      f'имя питомца {name} '
+                                      f'уровень чистоты {clear}')
 
 
 @bot.message_handler(commands=['rock'])
@@ -134,5 +152,5 @@ def callback(call):
 def text_handler(message):
     bot.send_message(message.chat.id, 'Такой команды нет, нажмите /feed чтобы покормить'
                                       ' /play для игры /sleep для сна, команда характеристики /about,'
-                                      ' вылечить /health, /rock чтобы поиграть в камень|ножницы|бумага')
+                                      ' вылечить /health, команда для мытья /clear ,/rock чтобы поиграть в камень|ножницы|бумага')
 bot.polling()
